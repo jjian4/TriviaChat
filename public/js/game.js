@@ -4,7 +4,7 @@ const socket = io()
 const $messageForm = document.querySelector('#message-form')
 const $messageFormInput = $messageForm.querySelector('input')
 const $messageFormButton = $messageForm.querySelector('button')
-const $sendQuestionButton = document.querySelector('#send-question')
+const $sendTriviaButton = document.querySelector('#send-trivia')
 const $messages = document.querySelector('#messages')
 
 
@@ -27,8 +27,21 @@ socket.on('message', (message) => {
     // autoscroll()
 })
 
-socket.on('question', (questionMessage) => {
-    console.log('hi', questionMessage)
+socket.on('question', ({ username, createdAt, question }) => {
+    console.log(question.question)
+    const html = Mustache.render(questionTemplate, {
+        username: username,
+        createdAt: moment(createdAt).format('h:mma'),
+        question: question.question,
+        category: question.category,
+        difficulty: question.difficulty,
+        correct: question.correct_answer,
+        incorrect_0: question.incorrect_answers[0],
+        incorrect_1: question.incorrect_answers[1],
+        incorrect_2: question.incorrect_answers[2],
+    })
+    $messages.insertAdjacentHTML('beforeend', html)
+    // autoscroll()
 })
 
 //Send Message Button Clicked
@@ -52,12 +65,12 @@ $messageForm.addEventListener('submit', (e) => {
 })
 
 //Send Trivia Question Buttton Clicked
-$sendQuestionButton.addEventListener('click', (e) => {
+$sendTriviaButton.addEventListener('click', (e) => {
     //Disable the button until the message is sent
-    $sendQuestionButton.setAttribute('disabled', 'disabled')
+    $sendTriviaButton.setAttribute('disabled', 'disabled')
 
-    socket.emit('sendQuestion', (error) => {
-        $sendQuestionButton.removeAttribute('disabled')
+    socket.emit('sendTrivia', (error) => {
+        $sendTriviaButton.removeAttribute('disabled')
         if (error) {
             return console.log(error)
         }

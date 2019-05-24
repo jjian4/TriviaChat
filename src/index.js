@@ -3,7 +3,7 @@ const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
 const fetch = require('node-fetch');
-const { generateMessage, generateQuestion } = require('./utils/messages')
+const { generateMessage, unescapeQuestion } = require('./utils/messages')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
 
 const app = express()
@@ -40,15 +40,18 @@ io.on('connection', (socket) => {
         callback()
     })
 
-    socket.on('sendQuestion', async (callback) => {
+    socket.on('sendTrivia', async (callback) => {
         const user = getUser(socket.id)
 
         const response = await fetch('https://opentdb.com/api.php?amount=' + 1)
         const json = await response.json();
-    
+        question = unescapeQuestion(json['results'][0])
+
+        console.log(question)
+
         const questionMessage = {
             username: user.username,
-            question: json['results'],
+            question,
             createdAt: new Date().getTime()    
         }
         
