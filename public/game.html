@@ -3,37 +3,44 @@
     <head>
         <title>TriviaChat</title>
         <link rel='stylesheet' href='/css/styles.css'>
+        <link rel='stylesheet' href='/css/game.css'>
     </head>
 
     <body>
-        <h1>TriviaChat</h1>
 
-        <div id="messages"></div>
-        <div class='compose'>
-            <form id="message-form">
-                <input name="message" placeholder="Message" required autocomplete="off">
-                <button>Send</button>
-            </form>
-            <button id="send-trivia">Trivia Question</button>                        
+        <div class='main'>
+            <div id='sidebar' class='sidebar'></div>
+
+            <div class='chat'>
+                <div id="messages" class='messages'></div>
+                <div class='compose'>
+                    <form id="message-form">
+                        <input name="message" placeholder="Message" required autocomplete="off">
+                        <button>Send</button>
+                    </form>
+                    <button id="send-joke">Joke!</button>  
+                    <button id="send-trivia">Trivia!</button>  
+                </div>            
+            </div>
         </div>
 
+        <!-- <h1>TriviaChat</h1> -->
 
         <script id="message-template" type='text/html'>
             <div class='message'>
                 <p>
-                    <span>{{username}}</span>
-                    <span>{{createdAt}}</span>
+                    <span class='message-name'>{{username}}</span>
+                    <span class='message-time'>{{createdAt}}</span>
                 </p>
                 <p>{{message}}</p>
-                <hr>
             </div>
         </script>
 
         <script id="question-template" type='text/html'>
             <div class='message'>
                 <p>
-                    <span class=>{{username}}</span>
-                    <span class=>{{createdAt}}</span>
+                    <span class='message-name'>{{username}}</span>
+                    <span class='message-time'>{{createdAt}}</span>
                 </p>
                 <p>Trivia Question: {{question}}</p>
                 <p>Category: {{category}}</p>
@@ -45,6 +52,15 @@
             </div>
         </script>
 
+        <script id="sidebar-template" type='text/html'>
+            <h2 class='room-title'>{{room}}</h2>
+            <h3 class='list-title'>Users</h3>
+            <ul class='users'>
+                {{#users}}
+                    <li>{{username}}</li>
+                {{/users}}
+            </ul>
+        </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>        
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>

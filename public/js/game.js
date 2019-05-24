@@ -7,10 +7,10 @@ const $messageFormButton = $messageForm.querySelector('button')
 const $sendTriviaButton = document.querySelector('#send-trivia')
 const $messages = document.querySelector('#messages')
 
-
 //Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
 const questionTemplate = document.querySelector('#question-template').innerHTML
+const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 //Options (gets the username and room queries in the url)
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
@@ -42,6 +42,14 @@ socket.on('question', ({ username, createdAt, question }) => {
     })
     $messages.insertAdjacentHTML('beforeend', html)
     // autoscroll()
+})
+
+socket.on('roomData', ({ room, users }) => {
+    const html = Mustache.render(sidebarTemplate, {
+        room,
+        users
+    })
+    document.querySelector('#sidebar').innerHTML = html
 })
 
 //Send Message Button Clicked

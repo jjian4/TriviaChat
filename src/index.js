@@ -30,6 +30,10 @@ io.on('connection', (socket) => {
         socket.broadcast.to(user.room).emit('message', generateMessage('TriviaChat', `${user.username} has joined!`))
         
         //TODO: Update side bar
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUsersInRoom(user.room)
+        })
 
         callback()
     })
@@ -66,6 +70,10 @@ io.on('connection', (socket) => {
             io.to(user.room).emit('message', generateMessage('TriviaChat', `${user.username} has left!`))
        
             //TODO: Update side bar
+            io.to(user.room).emit('roomData', {
+                room: user.room,
+                users: getUsersInRoom(user.room)
+            })    
         }
     })
 

@@ -3,16 +3,22 @@
     <head>
         <title>TriviaChat</title>
         <link rel='stylesheet' href='/css/styles.css'>
+        <link rel='stylesheet' href='/css/index.css'>
     </head>
 
     <body>
-        <h1>TriviaChat</h1>
-        <form action='/game.html'>
-            <label>Username</label>
-            <input type='text' name='username' placeholder="Username" required>
-            <label>Room</label>
-            <input type='text' name='room' placeholder="Room" required>
-            <button>Join</button>
-        </form>
+        <div class='centered-form'>
+            <div class='centered-form-box'>
+                <h1>TriviaChat</h1>
+                <form action='/game.html'>
+                    <label>Username</label>
+                    <input type='text' name='username' placeholder="Username" required>
+                    <label>Join a Room</label>
+                    <input type='text' name='room' placeholder="Room Name" required>
+                    <button>Join</button>
+                </form>            
+            </div>
+        </div>
+
 </body>
 </html>
