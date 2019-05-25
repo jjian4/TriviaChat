@@ -30,6 +30,15 @@
 
 .message {
     margin-bottom: 16px;   
+    padding: 5px;
+}
+
+.joke-heading {
+    color: blue;
+}
+
+.trivia-heading {
+    color: red;
 }
 
 .message-name {

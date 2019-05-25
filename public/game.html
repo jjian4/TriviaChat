@@ -36,15 +36,31 @@
             </div>
         </script>
 
-        <script id="question-template" type='text/html'>
+        <script id="joke-template" type='text/html'>
             <div class='message'>
                 <p>
                     <span class='message-name'>{{username}}</span>
                     <span class='message-time'>{{createdAt}}</span>
                 </p>
-                <p>Trivia Question: {{question}}</p>
-                <p>Category: {{category}}</p>
-                <p>Difficulty: {{difficulty}}</p>
+                <div class='joke-heading'>
+                    <p>Type: {{type}}</p>
+                    <p>Setup: {{setup}}</p>        
+                </div>
+                <p>Punchline: {{punchline}}</p>
+            </div>
+        </script>
+
+        <script id="trivia-template" type='text/html'>
+            <div class='message'>
+                <p>
+                    <span class='message-name'>{{username}}</span>
+                    <span class='message-time'>{{createdAt}}</span>
+                </p>
+                <div class='trivia-heading'>
+                    <p>Category: {{category}}</p>
+                    <p>Difficulty: {{difficulty}}</p>
+                    <p>Trivia Question: {{question}}</p>        
+                </div>
                 <p>correct: {{correct}}</p>
                 <p>incorrect: {{incorrect_0}}</p>
                 <p>incorrect: {{incorrect_1}}</p>

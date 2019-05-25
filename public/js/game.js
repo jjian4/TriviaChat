@@ -4,12 +4,14 @@ const socket = io()
 const $messageForm = document.querySelector('#message-form')
 const $messageFormInput = $messageForm.querySelector('input')
 const $messageFormButton = $messageForm.querySelector('button')
+const $sendJokeButton = document.querySelector('#send-joke')
 const $sendTriviaButton = document.querySelector('#send-trivia')
 const $messages = document.querySelector('#messages')
 
 //Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
-const questionTemplate = document.querySelector('#question-template').innerHTML
+const jokeTemplate = document.querySelector('#joke-template').innerHTML
+const triviaTemplate = document.querySelector('#trivia-template').innerHTML
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 //Options (gets the username and room queries in the url)
@@ -17,7 +19,6 @@ const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true }
 
 
 socket.on('message', (message) => {
-    console.log(message)
     const html = Mustache.render(messageTemplate, {
         username: message.username,
         message: message.text,
@@ -27,9 +28,19 @@ socket.on('message', (message) => {
     // autoscroll()
 })
 
-socket.on('question', ({ username, createdAt, question }) => {
-    console.log(question.question)
-    const html = Mustache.render(questionTemplate, {
+socket.on('joke', ({ username, createdAt, joke }) => {
+    const html = Mustache.render(jokeTemplate, {
+        username: username,
+        createdAt: moment(createdAt).format('h:mma'),
+        type: joke.type,
+        setup: joke.setup,
+        punchline: joke.punchline
+    })
+    $messages.insertAdjacentHTML('beforeend', html)
+})
+
+socket.on('trivia', ({ username, createdAt, question }) => {
+    const html = Mustache.render(triviaTemplate, {
         username: username,
         createdAt: moment(createdAt).format('h:mma'),
         question: question.question,
@@ -72,6 +83,21 @@ $messageForm.addEventListener('submit', (e) => {
     })
 })
 
+//Send Joke Question Buttton Clicked
+$sendJokeButton.addEventListener('click', (e) => {
+    //Disable the button until the message is sent
+    $sendJokeButton.setAttribute('disabled', 'disabled')
+
+    socket.emit('sendJoke', (error) => {
+        $sendJokeButton.removeAttribute('disabled')
+        if (error) {
+            return console.log(error)
+        }
+        console.log('Joke delivered!')
+    })
+})
+
+
 //Send Trivia Question Buttton Clicked
 $sendTriviaButton.addEventListener('click', (e) => {
     //Disable the button until the message is sent
@@ -82,7 +108,7 @@ $sendTriviaButton.addEventListener('click', (e) => {
         if (error) {
             return console.log(error)
         }
-        console.log('Question delivered!')
+        console.log('Trivia question delivered!')
     })
 })
 

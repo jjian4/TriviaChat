@@ -44,6 +44,25 @@ io.on('connection', (socket) => {
         callback()
     })
 
+    socket.on('sendJoke', async (callback) => {
+        const user = getUser(socket.id)
+        
+        const response = await fetch('https://official-joke-api.appspot.com/random_joke')
+        const joke = await response.json();
+        
+        console.log(joke)
+
+        const jokeMessage = {
+            username: user.username,
+            joke,
+            createdAt: new Date().getTime()    
+        }
+
+        io.to(user.room).emit('joke', jokeMessage)
+
+        callback()
+    })
+
     socket.on('sendTrivia', async (callback) => {
         const user = getUser(socket.id)
 
@@ -59,10 +78,9 @@ io.on('connection', (socket) => {
             createdAt: new Date().getTime()    
         }
         
-        io.to(user.room).emit('question', questionMessage)
+        io.to(user.room).emit('trivia', questionMessage)
         callback()
     })
-
 
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)
