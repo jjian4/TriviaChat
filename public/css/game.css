@@ -63,7 +63,7 @@
     display: flex;
     flex-shrink: 0;
     margin-top: 16px;
-    padding: 24px;
+    padding: 12px;
 }
 
 .compose form {
@@ -72,7 +72,7 @@
 }
 
 .compose input {
-    border: 1px solid #eeeeee;
+    border: 2px solid black;
     width: 100%;
     padding: 12px;
     flex-grow: 1;
@@ -83,11 +83,11 @@
     margin-right: 12px;
 }
 
-#send-joke {
+.send-joke {
     background: blue;
 }
 
-#send-trivia {
+.send-trivia {
     background: red;
     margin-right: 0;
 }
