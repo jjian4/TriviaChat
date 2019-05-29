@@ -63,10 +63,10 @@
                 <div class='trivia-heading'>
                     <p>Category: {{category}}</p>
                     <p>Difficulty: {{difficulty}}</p>
-                    <p>Trivia Question: {{question}}</p>        
+                    <p class='trivia-question'>{{question}}</p>        
                 </div>
                 {{#answers}}
-                <button class='trivia-button btn'>{{.}}</button>
+                <button class='trivia-button btn' onclick="triviaAnswered(this)">{{.}}</button>
                 {{/answers}}
             </div>
         </script>

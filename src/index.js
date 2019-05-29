@@ -6,7 +6,7 @@ const fetch = require('node-fetch')
 const shuffle = require('shuffle-array')
 const { generateMessage, unescapeQuestion } = require('./utils/messages')
 const { addUser, removeUser, getUser, updateUser, getUsersInRoom } = require('./utils/users')
-const { addTrivia, removeTrivia } = require('./utils/trivias')
+const { addTrivia, getTrivia, removeTrivia } = require('./utils/trivias')
 
 const app = express()
 const server = http.createServer(app)
@@ -86,8 +86,7 @@ io.on('connection', (socket) => {
         trivia = unescapeQuestion(json['results'][0])
 
         console.log(trivia)
-
-        addTrivia(trivia)
+        addTrivia(trivia, user.room)
 
         let answers = []
         trivia.incorrect_answers.forEach(ans => {
@@ -108,6 +107,26 @@ io.on('connection', (socket) => {
         updateUserStats(user)
         callback()
     })
+
+    socket.on('checkAnswer', ({question, answer}, callback) => {
+        const user = getUser(socket.id)
+        const trivia = getTrivia(question, user.room)
+        if (trivia.correct_answer === answer) {
+            socket.emit('correct', {
+                question,
+                answer
+            })
+        }
+        else {
+            socket.emit('incorrect', {
+                question,
+                correct_answer: trivia.correct_answer,
+                wrong_answer: answer
+            })
+        }
+        callback()
+    })
+
 
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)

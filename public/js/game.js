@@ -70,6 +70,14 @@ socket.on('trivia', ({ username, createdAt, trivia, answers }) => {
     autoscroll()
 })
 
+socket.on('correct', ({ question, answer }) => {
+    alert('correct')
+})
+
+socket.on('incorrect', ({ question, correct_answer, wrong_answer }) => {
+    alert('incorrect')
+})
+
 socket.on('roomData', ({ room, users }) => {
     const html = Mustache.render(sidebarTemplate, {
         room,
@@ -125,6 +133,26 @@ $sendTriviaButton.addEventListener('click', (e) => {
         console.log('Trivia question delivered!')
     })
 })
+
+//Check if trivia answer is correct
+const triviaAnswered = (button) => {
+    const answer = button.innerText
+    const question = button.parentElement.querySelector('p.trivia-question').innerText
+
+    //Disable the buttons
+    let buttons = button.parentElement.getElementsByTagName('button')
+    for (let i = 0; i < buttons.length; ++i) {
+        buttons[i].disabled = true
+    }
+    
+    socket.emit('checkAnswer', {question, answer}, (error) => {
+        if (error) {
+            return console.log(error)
+        }
+        console.log('Trivia question submitted!')
+    })
+}
+
 
 
 socket.emit('join', { username, room }, (error) => {
