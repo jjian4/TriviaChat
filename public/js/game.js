@@ -8,6 +8,8 @@ const $sendJokeButton = document.querySelector('#send-joke')
 const $sendTriviaButton = document.querySelector('#send-trivia')
 const $messages = document.querySelector('#messages')
 
+const $triviaDropup = document.querySelector('#trivia-dropup')
+
 //Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
 const jokeTemplate = document.querySelector('#joke-template').innerHTML
@@ -34,6 +36,17 @@ const autoscroll = () => {
         $messages.scrollTop = $messages.scrollHeight
     }
 }
+
+socket.on('fillCategories', (categories) => {
+    const dropup = document.getElementById('trivia-dropup')
+    for (let i = 0; i < categories.length; ++i) {
+        const a = document.createElement('a')
+        a.setAttribute('class', 'dropdown-item');
+        a.setAttribute('onclick', 'sendTriviaCategory(this)')
+        a.innerHTML = categories[i].name
+        dropup.append(a)
+    }
+})
 
 socket.on('message', (message) => {
     const html = Mustache.render(messageTemplate, {
@@ -134,6 +147,16 @@ $sendTriviaButton.addEventListener('click', (e) => {
     })
 })
 
+//Send Trivia Category Question Clicked
+const sendTriviaCategory = (category) => {
+    socket.emit('sendTriviaCategory', category.innerText, (error) => {
+        if (error) {
+            return console.log(error)
+        }
+        console.log('Trivia question w/ category delivered!')
+    })
+}
+
 //Check if trivia answer is correct
 const triviaAnswered = (button) => {
     const answer = button.innerText
@@ -152,7 +175,6 @@ const triviaAnswered = (button) => {
         console.log('Trivia question submitted!')
     })
 }
-
 
 
 socket.emit('join', { username, room }, (error) => {

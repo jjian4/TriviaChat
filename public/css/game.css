@@ -56,19 +56,19 @@
     color: #0070CC;
 }
 
-.trivia-button {
+.trivia-answer-button {
     padding: 6px;
     background: yellow;
     color: black;
     font-size: 15px;
     transition: background .3s ease;
 }
-button:hover {
+.trivia-answer-button:hover {
     border: 1px solid black;
     background: yellow;
     color: black;
 }
-button:disabled {
+.trivia-answer-button:disabled {
     cursor: default;
     background: gray;
     color: black;
@@ -118,11 +118,15 @@ button:disabled {
 
 .send-trivia {
     background: red;
-    margin-right: 0;
 }
 .send-trivia:hover {
     color: white;
 }
+.send-trivia-dropdown .dropdown-menu a {
+    font-size: 12px;
+    padding-left: 6px;
+    padding-right: 6px;
+ }
 
 
 /* sidebar */

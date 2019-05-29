@@ -6,7 +6,7 @@ const fetch = require('node-fetch')
 const shuffle = require('shuffle-array')
 const { generateMessage, unescapeQuestion } = require('./utils/messages')
 const { addUser, removeUser, getUser, updateUser, getUsersInRoom } = require('./utils/users')
-const { addTrivia, getTrivia, removeTrivia } = require('./utils/trivias')
+const { addTrivia, getTrivia, removeTrivia, getCategories, getCategoryId } = require('./utils/trivias')
 
 const app = express()
 const server = http.createServer(app)
@@ -30,7 +30,7 @@ const updateUserStats = (user) => {
 io.on('connection', (socket) => {
     console.log('New WebSocket connection!!')
 
-    socket.on('join', ({ username, room }, callback) => {
+    socket.on('join', async ({ username, room }, callback) => {
         const {error, user} = addUser({ id: socket.id, username, room })
         if (error) {
             return callback(error)
@@ -41,12 +41,16 @@ io.on('connection', (socket) => {
         socket.emit('message', generateMessage('TriviaChat', `Welcome, ${username}!`))
         socket.broadcast.to(user.room).emit('message', generateMessage('TriviaChat', `${user.username} has joined!`))
         
+        //Fetch trivia categories and fill the dropup menu
+        const categories = await getCategories()
+        socket.emit('fillCategories', categories)
+
         //Update side bar
         io.to(user.room).emit('roomData', {
             room: user.room,
             users: getUsersInRoom(user.room)
         })
-    
+
         callback()
     })
 
@@ -78,10 +82,8 @@ io.on('connection', (socket) => {
         callback()
     })
 
-    socket.on('sendTrivia', async (callback) => {
-        const user = getUser(socket.id)
-
-        const response = await fetch('https://opentdb.com/api.php?amount=' + 1)
+    const sendTrivia = async (user, url) => {
+        const response = await fetch(url)
         const json = await response.json();
         trivia = unescapeQuestion(json['results'][0])
 
@@ -94,7 +96,7 @@ io.on('connection', (socket) => {
         });
         answers.push(trivia.correct_answer)
         shuffle(answers)
-        
+
         const triviaMessage = {
             username: user.username,
             trivia,
@@ -105,6 +107,18 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('trivia', triviaMessage)
         user.numTriviasSent += 1
         updateUserStats(user)
+    }
+    socket.on('sendTrivia', async (callback) => {
+        const user = getUser(socket.id)
+        await sendTrivia(user, 'https://opentdb.com/api.php?amount=1')
+        callback()
+    })
+    socket.on('sendTriviaCategory', async (categoryName, callback) => {
+        const user = getUser(socket.id)
+        console.log(categoryName)
+        const id = getCategoryId(categoryName)
+        console.log(id)
+        await sendTrivia(user, 'https://opentdb.com/api.php?amount=1&category=' + id)
         callback()
     })
 
