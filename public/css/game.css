@@ -38,7 +38,7 @@
 }
 
 .trivia-heading {
-    color: red;
+    color: purple;
 }
 
 .message-name {
@@ -117,7 +117,7 @@
 }
 
 .send-trivia {
-    background: red;
+    background: purple;
 }
 .send-trivia:hover {
     color: white;

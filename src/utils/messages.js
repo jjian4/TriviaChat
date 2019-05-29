@@ -17,14 +17,14 @@ const generateMessage = (username, text) => {
 const unescapeQuestion = (question) => {
     question.category = decode(question.category, 'all')
 
-    question.question = question.question.replace('&#039;', '&#39;')
+    question.question = question.question.replace(/&#039;/g, '&#39;')
     question.question = decode(question.question, 'all')
 
-    question.correct_answer = question.correct_answer.replace('&#039;', '&#39;')
+    question.correct_answer = question.correct_answer.replace(/&#039;/g, '&#39;')
     question.correct_answer = decode(question.correct_answer, 'all')
 
     question.incorrect_answers.forEach(function (str, index) {
-        str2 = str.replace('&#039;', '&#39;')
+        str2 = str.replace(/&#039;/g, '&#39;')
         question.incorrect_answers[index] = decode(str2, 'all')
     });
 

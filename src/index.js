@@ -127,14 +127,13 @@ io.on('connection', (socket) => {
         const trivia = getTrivia(question, user.room)
         if (trivia.correct_answer === answer) {
             socket.emit('correct', {
-                question,
+                trivia,
                 answer
             })
         }
         else {
             socket.emit('incorrect', {
-                question,
-                correct_answer: trivia.correct_answer,
+                trivia,
                 wrong_answer: answer
             })
         }

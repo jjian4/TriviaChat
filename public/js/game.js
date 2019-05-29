@@ -8,7 +8,8 @@ const $sendJokeButton = document.querySelector('#send-joke')
 const $sendTriviaButton = document.querySelector('#send-trivia')
 const $messages = document.querySelector('#messages')
 
-const $triviaDropup = document.querySelector('#trivia-dropup')
+const $triviaModalTitle = document.querySelector('#trivia-modal-title')
+const $triviaModalBody = document.querySelector('#trivia-modal-body')
 
 //Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
@@ -83,12 +84,19 @@ socket.on('trivia', ({ username, createdAt, trivia, answers }) => {
     autoscroll()
 })
 
-socket.on('correct', ({ question, answer }) => {
-    alert('correct')
+socket.on('correct', ({ trivia, answer }) => {
+    console.log(trivia.question)
+    console.log(answer)
+    $triviaModalTitle.innerHTML = 'Correct!!!'
+    $('#trivia-modal').modal('show');
 })
 
-socket.on('incorrect', ({ question, correct_answer, wrong_answer }) => {
-    alert('incorrect')
+socket.on('incorrect', ({ trivia, wrong_answer }) => {
+    console.log(trivia.question)
+    console.log(trivia.correct_answer)
+    console.log(wrong_answer)
+    $triviaModalTitle.innerHTML = 'Incorrect...'
+    $('#trivia-modal').modal('show');
 })
 
 socket.on('roomData', ({ room, users }) => {
@@ -172,7 +180,7 @@ const triviaAnswered = (button) => {
         if (error) {
             return console.log(error)
         }
-        console.log('Trivia question submitted!')
+        console.log('Trivia answer submitted!')
     })
 }
 
