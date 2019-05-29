@@ -18,7 +18,14 @@ const addUser = ({ id, username, room }) => {
     }
 
     //Store user
-    const user = { id, username, room}
+    const user = { 
+        id, 
+        username, 
+        room,
+        numMessagesSent: 0,
+        numJokesSent: 0,
+        numTriviasSent: 0
+    }
     users.push(user)
     return { user }
 }
@@ -34,6 +41,11 @@ const getUser = (id) => {
     return users.find((user) => user.id === id)
 }
 
+const updateUser = (updatedUser) => {
+    const index = users.findIndex((user) => user.id === updatedUser.id)
+    users.splice(index, 1, updatedUser)
+}
+
 const getUsersInRoom = (room) => {
     room = room.trim().toLowerCase()
     return users.filter((user) => user.room === room)
@@ -43,5 +55,6 @@ module.exports = {
     addUser,
     removeUser,
     getUser,
+    updateUser,
     getUsersInRoom
 }

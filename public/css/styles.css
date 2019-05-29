@@ -46,11 +46,10 @@ button {
     font-size: 16px;
     transition: background .3s ease;
 }
-
 button:hover {
     background: gray;
+    color: white;
 }
-
 button:disabled {
     cursor: default;
     background: gray;

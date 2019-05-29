@@ -2,9 +2,11 @@ const path = require('path')
 const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
-const fetch = require('node-fetch');
+const fetch = require('node-fetch')
+const shuffle = require('shuffle-array')
 const { generateMessage, unescapeQuestion } = require('./utils/messages')
-const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
+const { addUser, removeUser, getUser, updateUser, getUsersInRoom } = require('./utils/users')
+const { addTrivia, removeTrivia } = require('./utils/trivias')
 
 const app = express()
 const server = http.createServer(app)
@@ -14,6 +16,16 @@ const port = process.env.PORT || 3000
 const publicDirectoryPath = path.join(__dirname, '../public')
 
 app.use(express.static(publicDirectoryPath))
+
+
+const updateUserStats = (user) => {
+    updateUser(user)
+    io.to(user.room).emit('roomData', {
+        room: user.room,
+        users: getUsersInRoom(user.room)
+    })
+}
+
 
 io.on('connection', (socket) => {
     console.log('New WebSocket connection!!')
@@ -29,18 +41,20 @@ io.on('connection', (socket) => {
         socket.emit('message', generateMessage('TriviaChat', `Welcome, ${username}!`))
         socket.broadcast.to(user.room).emit('message', generateMessage('TriviaChat', `${user.username} has joined!`))
         
-        //TODO: Update side bar
+        //Update side bar
         io.to(user.room).emit('roomData', {
             room: user.room,
             users: getUsersInRoom(user.room)
         })
-
+    
         callback()
     })
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id)
         io.to(user.room).emit('message', generateMessage(user.username, message))
+        user.numMessagesSent += 1
+        updateUserStats(user)
         callback()
     })
 
@@ -59,7 +73,8 @@ io.on('connection', (socket) => {
         }
 
         io.to(user.room).emit('joke', jokeMessage)
-
+        user.numJokesSent += 1
+        updateUserStats(user)
         callback()
     })
 
@@ -68,17 +83,29 @@ io.on('connection', (socket) => {
 
         const response = await fetch('https://opentdb.com/api.php?amount=' + 1)
         const json = await response.json();
-        question = unescapeQuestion(json['results'][0])
+        trivia = unescapeQuestion(json['results'][0])
 
-        console.log(question)
+        console.log(trivia)
 
-        const questionMessage = {
+        addTrivia(trivia)
+
+        let answers = []
+        trivia.incorrect_answers.forEach(ans => {
+            answers.push(ans)
+        });
+        answers.push(trivia.correct_answer)
+        shuffle(answers)
+        
+        const triviaMessage = {
             username: user.username,
-            question,
+            trivia,
+            answers,
             createdAt: new Date().getTime()    
         }
         
-        io.to(user.room).emit('trivia', questionMessage)
+        io.to(user.room).emit('trivia', triviaMessage)
+        user.numTriviasSent += 1
+        updateUserStats(user)
         callback()
     })
 
@@ -87,11 +114,11 @@ io.on('connection', (socket) => {
         if (user) {
             io.to(user.room).emit('message', generateMessage('TriviaChat', `${user.username} has left!`))
        
-            //TODO: Update side bar
+            //Update side bar
             io.to(user.room).emit('roomData', {
                 room: user.room,
                 users: getUsersInRoom(user.room)
-            })    
+            })
         }
     })
 

@@ -57,17 +57,14 @@ socket.on('joke', ({ username, createdAt, joke }) => {
     autoscroll()
 })
 
-socket.on('trivia', ({ username, createdAt, question }) => {
+socket.on('trivia', ({ username, createdAt, trivia, answers }) => {
     const html = Mustache.render(triviaTemplate, {
         username: username,
         createdAt: moment(createdAt).format('h:mma'),
-        question: question.question,
-        category: question.category,
-        difficulty: question.difficulty,
-        correct: question.correct_answer,
-        incorrect_0: question.incorrect_answers[0],
-        incorrect_1: question.incorrect_answers[1],
-        incorrect_2: question.incorrect_answers[2],
+        question: trivia.question,
+        category: trivia.category,
+        difficulty: trivia.difficulty,
+        answers
     })
     $messages.insertAdjacentHTML('beforeend', html)
     autoscroll()
@@ -114,7 +111,6 @@ $sendJokeButton.addEventListener('click', (e) => {
         console.log('Joke delivered!')
     })
 })
-
 
 //Send Trivia Question Buttton Clicked
 $sendTriviaButton.addEventListener('click', (e) => {
