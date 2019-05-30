@@ -129,6 +129,7 @@ io.on('connection', (socket) => {
             socket.emit('correct', {
                 trivia
             })
+            user.numTriviasCorrect += 1
         }
         else {
             socket.emit('incorrect', {
@@ -136,6 +137,10 @@ io.on('connection', (socket) => {
                 wrong_answer: answer
             })
         }
+
+        user.numTriviasAnswered += 1
+        updateUserStats(user)
+
         callback()
     })
 

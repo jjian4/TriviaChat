@@ -33,12 +33,12 @@
     padding: 5px;
 }
 
-.joke-heading {
-    color: blue;
+.joke-message {
+    background-color: lightblue;
 }
 
-.trivia-heading {
-    color: purple;
+.trivia-message {
+    background-color: lightpink;
 }
 
 .message-name {
@@ -78,6 +78,7 @@
 /* Trivia modal */
 .modal-body {
     text-align: center;
+    line-height: 1.5;
 }
 .trivia-correct {
     color: green;
@@ -130,7 +131,7 @@
 }
 
 .send-trivia {
-    background: purple;
+    background: red;
 }
 .send-trivia:hover {
     color: white;

@@ -63,7 +63,6 @@ socket.on('joke', ({ username, createdAt, joke }) => {
     const html = Mustache.render(jokeTemplate, {
         username: username,
         createdAt: moment(createdAt).format('h:mma'),
-        type: joke.type,
         setup: joke.setup,
         punchline: joke.punchline
     })
@@ -77,7 +76,6 @@ socket.on('trivia', ({ username, createdAt, trivia, answers }) => {
         createdAt: moment(createdAt).format('h:mma'),
         question: trivia.question,
         category: trivia.category,
-        difficulty: trivia.difficulty,
         answers
     })
     $messages.insertAdjacentHTML('beforeend', html)

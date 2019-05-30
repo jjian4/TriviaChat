@@ -24,7 +24,9 @@ const addUser = ({ id, username, room }) => {
         room,
         numMessagesSent: 0,
         numJokesSent: 0,
-        numTriviasSent: 0
+        numTriviasSent: 0,
+        numTriviasAnswered: 0,
+        numTriviasCorrect: 0
     }
     users.push(user)
     return { user }

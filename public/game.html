@@ -65,28 +65,26 @@
         </script>
 
         <script id="joke-template" type='text/html'>
-            <div class='message'>
+            <div class='message joke-message'>
                 <p>
                     <span class='message-name'>{{username}}</span>
                     <span class='message-time'>{{createdAt}}</span>
                 </p>
                 <div class='joke-heading'>
-                    <p>Type: {{type}}</p>
-                    <p>Setup: {{setup}}</p>        
+                    <p>{{setup}}</p>        
                 </div>
-                <p>Punchline: {{punchline}}</p>
+                <p>{{punchline}}</p>
             </div>
         </script>
 
         <script id="trivia-template" type='text/html'>
-            <div class='message'>
+            <div class='message trivia-message'>
                 <p>
                     <span class='message-name'>{{username}}</span>
                     <span class='message-time'>{{createdAt}}</span>
                 </p>
                 <div class='trivia-heading'>
                     <p>Category: {{category}}</p>
-                    <p>Difficulty: {{difficulty}}</p>
                     <p class='trivia-question'>{{question}}</p>        
                 </div>
                 {{#answers}}
@@ -104,7 +102,8 @@
                     <div class='user-stats'>
                         <li>Messages Sent: {{numMessagesSent}}</li>
                         <li>Jokes Sent: {{numJokesSent}}</li>
-                        <li>Trivias Sent: {{numTriviasSent}}</li>        
+                        <li>Trivias Sent: {{numTriviasSent}}</li>    
+                        <li>Trivas Answered Correct: {{numTriviasCorrect}} / {{numTriviasAnswered}}</li>    
                     </div>
                 {{/users}}
             </ul>
