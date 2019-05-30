@@ -84,10 +84,15 @@ socket.on('trivia', ({ username, createdAt, trivia, answers }) => {
     autoscroll()
 })
 
-socket.on('correct', ({ trivia, answer }) => {
+socket.on('correct', ({ trivia }) => {
     console.log(trivia.question)
-    console.log(answer)
-    $triviaModalTitle.innerHTML = 'Correct!!!'
+    // $triviaModalTitle.innerHTML = 'Correct!!!'
+    $triviaModalBody.innerHTML = `
+        <h5 class='col-12'>${trivia.question}</h5>
+        <div class='col-6'>${trivia.category}</div>
+        <div class='col-6'>Difficulty: ${trivia.difficulty}</div>
+        <div class='trivia-correct col-12'>Answer: ${trivia.correct_answer} (Correct)</div>
+    `
     $('#trivia-modal').modal('show');
 })
 
@@ -95,7 +100,14 @@ socket.on('incorrect', ({ trivia, wrong_answer }) => {
     console.log(trivia.question)
     console.log(trivia.correct_answer)
     console.log(wrong_answer)
-    $triviaModalTitle.innerHTML = 'Incorrect...'
+    // $triviaModalTitle.innerHTML = 'Incorrect...'
+    $triviaModalBody.innerHTML = `
+        <h5 class='col-12'>${trivia.question}</h5>
+        <div class='col-6'>${trivia.category}</div>
+        <div class='col-6'>Difficulty: ${trivia.difficulty}</div>
+        <div class='trivia-correct col-12'>Correct Answer: ${trivia.correct_answer}</div>
+        <div class='trivia-incorrect col-12'>Your Answer: ${wrong_answer}</div>
+    `
     $('#trivia-modal').modal('show');
 })
 

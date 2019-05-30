@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
     const sendTrivia = async (user, url) => {
         const response = await fetch(url)
         const json = await response.json();
-        trivia = unescapeQuestion(json['results'][0])
+        let trivia = unescapeQuestion(json['results'][0])
 
         console.log(trivia)
         addTrivia(trivia, user.room)
@@ -127,8 +127,7 @@ io.on('connection', (socket) => {
         const trivia = getTrivia(question, user.room)
         if (trivia.correct_answer === answer) {
             socket.emit('correct', {
-                trivia,
-                answer
+                trivia
             })
         }
         else {

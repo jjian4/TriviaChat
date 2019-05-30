@@ -57,6 +57,7 @@
 }
 
 .trivia-answer-button {
+    margin: 0 4px 4px 0;
     padding: 6px;
     background: yellow;
     color: black;
@@ -73,6 +74,18 @@
     background: gray;
     color: black;
 }
+
+/* Trivia modal */
+.modal-body {
+    text-align: center;
+}
+.trivia-correct {
+    color: green;
+}
+.trivia-incorrect {
+    color: red;
+}
+
 
 /* compose */
 
