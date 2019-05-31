@@ -1,4 +1,4 @@
-/* game.html layout */
+/* room.html layout */
 
 .main {
     display: flex;
@@ -21,7 +21,8 @@
 
 .messages {
     flex-grow: 1;
-    padding: 24px 24px 0 24px;
+    /* padding: 24px 24px 0 24px; */
+    padding-top: 16px;
     overflow-y: scroll;
 }
 
@@ -29,13 +30,19 @@
 /* messages */
 
 .message {
-    margin-bottom: 16px;   
-    padding: 5px;
+    /* margin-bottom: 16px;    */
+    padding: 8px 24px 8px 24px;
+    background-color: whitesmoke;
+    border-bottom: 2px solid white;
 }
 
+/* .message p {
+    margin-bottom: 8px;
+} */
+
 .message-name {
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: bold;
+    font-size: 20px;
     margin-right: 8px;
 }
 
@@ -47,12 +54,17 @@
 .joke-message {
     background-color: lightblue;
 }
+.joke-punchline-row {
+    text-align: right;
+}   
 .joke-punchline-button {
     padding: 6px;
     background: blue;
     color: white;
     font-size: 15px;
     transition: background .3s ease;
+    text-align: right;
+    display: inline-block;
 }
 .joke-punchline-button:hover {
     border: 1px solid white;
@@ -62,13 +74,20 @@
 .joke-punchline {
     font-weight: bold;
     display: none;
+    text-align: right;
 }
 
 .trivia-message {
     background-color: lightpink;
 }
+.trivia-heading {
+    padding-bottom: 16px;
+}
+.trivia-answers {
+    /* text-align: center; */
+}
 .trivia-answer-button {
-    margin: 0 4px 4px 0;
+    margin: 0 6px 6px 0;
     padding: 6px;
     background: #f06330;
     color: black;

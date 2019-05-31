@@ -154,7 +154,7 @@ $sendJokeButton.addEventListener('click', (e) => {
 //Remove button and show the joke punchline underneath
 const showPunchline = (button) => {
     button.style.display = 'none'
-    const $punchline = button.parentElement.querySelector('p.joke-punchline')
+    const $punchline = button.parentElement.querySelector('span.joke-punchline')
     $punchline.style.display = 'block'
 }
 
@@ -185,7 +185,7 @@ const sendTriviaCategory = (category) => {
 //Check if trivia answer is correct
 const triviaAnswered = (button) => {
     const answer = button.innerText
-    const question = button.parentElement.querySelector('p.trivia-question').innerText
+    const question = button.parentElement.parentElement.querySelector('span.trivia-question').innerText
 
     //Disable the buttons
     let buttons = button.parentElement.getElementsByTagName('button')
@@ -201,6 +201,14 @@ const triviaAnswered = (button) => {
     })
 }
 
+//Close the trivia modal with space
+$(window).keypress(function (e) {
+    if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault()
+        $('#trivia-modal').modal('hide');
+    }    
+})
+  
 
 socket.emit('join', { username, room }, (error) => {
     if (error) {
