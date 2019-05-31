@@ -1,7 +1,7 @@
 /* Join Page Styles */
 
 .centered-form {
-    background: gray;
+    background: black;
     width: 100vw;
     height: 100vh;   
     display: flex;
@@ -12,15 +12,27 @@
 .centered-form-box {
     box-shadow: 0px 0px 17px 1px #1D1F26;
     background: #F7F7FA;
-    padding: 24px;
-    width: 400px;
+    padding: 18px 24px 18px 24px;
+    width: 375px;
+}
+
+.logo {
+    text-align: center;
+    padding-bottom: 12px;
 }
 
 .centered-form button {
     width: 100%;
+    background: #f03030;
 }
 
 .centered-form input {
     margin-bottom: 16px;
     width: 100%;
+}
+
+.footer {
+    margin-top: 18px;
+    text-align: center;
+    color: dimgray;
 }

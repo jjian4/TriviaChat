@@ -10,7 +10,7 @@ html, body {
     font-size: 16px;
     line-height: 1;
     color: black;
-    font-family: Arial;
+    font-family: 'Lato', sans-serif;
     max-width: 100%;
     overflow-x: hidden;
 }
