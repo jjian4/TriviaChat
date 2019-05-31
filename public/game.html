@@ -73,7 +73,8 @@
                 <div class='joke-heading'>
                     <p>{{setup}}</p>        
                 </div>
-                <p>{{punchline}}</p>
+                <button id='joke-punchline-button' class='btn joke-punchline-button' onclick='showPunchline(this)'>Show Punchline</button>
+                <p class='joke-punchline'>{{punchline}}</p>
             </div>
         </script>
 
@@ -94,6 +95,11 @@
         </script>
 
         <script id="sidebar-template" type='text/html'>
+            <div class='sidebar-logo'>
+                <a href="index.html">
+                    <img src="/img/logo_2.png" alt="TriviaChat logo" width='160'>
+                </a>
+            </div>
             <p class='room-title'>Room: {{room}}</p>
             <p class='list-title'>Users</p>
             <ul class='users'>

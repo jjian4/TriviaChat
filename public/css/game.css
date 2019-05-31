@@ -7,7 +7,7 @@
 .sidebar {
     height: 100vh;
     color: white;
-    background: #505050;
+    background: black;
     width: 225px;
     overflow-y: scroll
 }
@@ -33,14 +33,6 @@
     padding: 5px;
 }
 
-.joke-message {
-    background-color: lightblue;
-}
-
-.trivia-message {
-    background-color: lightpink;
-}
-
 .message-name {
     font-weight: 600;
     font-size: 16px;
@@ -52,21 +44,40 @@
     font-size: 14px;
 }
 
-.message a {
-    color: #0070CC;
+.joke-message {
+    background-color: lightblue;
+}
+.joke-punchline-button {
+    padding: 6px;
+    background: blue;
+    color: white;
+    font-size: 15px;
+    transition: background .3s ease;
+}
+.joke-punchline-button:hover {
+    border: 1px solid white;
+    background: blue;
+    color: white;
+}
+.joke-punchline {
+    font-weight: bold;
+    display: none;
 }
 
+.trivia-message {
+    background-color: lightpink;
+}
 .trivia-answer-button {
     margin: 0 4px 4px 0;
     padding: 6px;
-    background: yellow;
+    background: #f06330;
     color: black;
     font-size: 15px;
     transition: background .3s ease;
 }
 .trivia-answer-button:hover {
     border: 1px solid black;
-    background: yellow;
+    background: #f06330;
     color: black;
 }
 .trivia-answer-button:disabled {
@@ -74,6 +85,7 @@
     background: gray;
     color: black;
 }
+
 
 /* Trivia modal */
 .modal-body {
@@ -131,10 +143,11 @@
 }
 
 .send-trivia {
-    background: red;
+    background: #f03030;
 }
 .send-trivia:hover {
     color: white;
+    background: #f06330;
 }
 .send-trivia-dropdown .dropdown-menu a {
     font-size: 12px;
@@ -145,17 +158,28 @@
 
 /* sidebar */
 
+.sidebar-logo {
+    text-align: center;
+    padding: 6px 0;
+}
+
 .room-title {
-    font-weight: 400;
-    font-size: 22px;
-    background: #2c2f3a;
-    padding: 24px;   
+    background: #f03030;
+    border: 2px solid black;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 12px 0 12px 0;
+    text-align: center;
+    margin: 0;
+
 }
 
 .list-title {
     font-weight: bold;
     font-size: 18px;
-    margin: 12px 0 4px 0;
+    padding-top: 12px;
+    margin: 0;
     text-align: center;
 }
 

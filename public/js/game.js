@@ -151,6 +151,13 @@ $sendJokeButton.addEventListener('click', (e) => {
     })
 })
 
+//Remove button and show the joke punchline underneath
+const showPunchline = (button) => {
+    button.style.display = 'none'
+    const $punchline = button.parentElement.querySelector('p.joke-punchline')
+    $punchline.style.display = 'block'
+}
+
 //Send Trivia Question Buttton Clicked
 $sendTriviaButton.addEventListener('click', (e) => {
     //Disable the button until the message is sent
