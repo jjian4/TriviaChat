@@ -1,9 +1,8 @@
 const fetch = require('node-fetch')
+const { getUsersInRoom } = require('./users')
 
-
-const trivias = []
-
-//Contains category, type, difficulty, question, correct_answer, incorrect_answers
+//Each contains category, type, difficulty, question, correct_answer, incorrect_answers
+let trivias = []
 
 const addTrivia = (trivia, room) => {
     trivia.numAnswerers = 0
@@ -14,15 +13,15 @@ const addTrivia = (trivia, room) => {
 const getTrivia = (question, room) => {
     let trivia = trivias.find((trivia) => trivia.question === question && trivia.room === room)
     trivia.numAnswerers += 1
+    
+    //Remove trivia when all have answered
+    if (trivia.numAnswerers === getUsersInRoom(room).length) {
+        trivias = trivias.filter((item) => item !== trivia)
+    }
+
     return trivia
 }
 
-
-//TODO: remove trivia when all have answered
-
-const removeTrivia = () => {
-
-}
 
 
 
@@ -43,7 +42,6 @@ const getCategoryId = (name) => {
 module.exports = {
     addTrivia,
     getTrivia,
-    removeTrivia,
     getCategories,
     getCategoryId
 }

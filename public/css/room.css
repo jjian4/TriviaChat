@@ -169,10 +169,11 @@
 }
 .send-trivia-dropdown .dropdown-menu a {
     font-size: 12px;
+    cursor: pointer;
+    margin: 4px;
     padding-left: 6px;
     padding-right: 6px;
- }
-
+}
 
 /* sidebar */
 

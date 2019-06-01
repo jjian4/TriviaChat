@@ -201,12 +201,14 @@ const triviaAnswered = (button) => {
     })
 }
 
-//Close the trivia modal with space
+//Close the trivia modal with space or enter
 $(window).keypress(function (e) {
-    if (e.key === ' ' || e.key === 'Spacebar') {
-        e.preventDefault()
-        $('#trivia-modal').modal('hide');
-    }    
+    if (!$($messageFormInput).is(':focus')) {
+        if (e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter') {
+            e.preventDefault()
+            $('#trivia-modal').modal('hide');
+        }        
+    }
 })
   
 

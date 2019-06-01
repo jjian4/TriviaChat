@@ -4,11 +4,22 @@ const express = require('express')
 const socketio = require('socket.io')
 const fetch = require('node-fetch')
 const shuffle = require('shuffle-array')
+
+require('./db/mongoose') 
+const Leaderboard = require('./models/leaderboard')
+const lbRouter = require('./routers/leaderboard')
+
 const { generateMessage, unescapeQuestion } = require('./utils/messages')
 const { addUser, removeUser, getUser, updateUser, getUsersInRoom } = require('./utils/users')
-const { addTrivia, getTrivia, removeTrivia, getCategories, getCategoryId } = require('./utils/trivias')
+const { addTrivia, getTrivia, getCategories, getCategoryId } = require('./utils/trivias')
 
 const app = express()
+
+//For the leaderboard router
+app.use(express.json())
+app.use(lbRouter)
+
+//Server for socket.io
 const server = http.createServer(app)
 const io = socketio(server)
 
@@ -18,17 +29,17 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
 
-const updateUserStats = (user) => {
-    updateUser(user)
-    io.to(user.room).emit('roomData', {
-        room: user.room,
-        users: getUsersInRoom(user.room)
-    })
-}
-
-
 io.on('connection', (socket) => {
     console.log('New WebSocket connection!!')
+
+    //Helper func for updating sidebar's stats
+    const updateUserStats = (user) => {
+        updateUser(user)
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUsersInRoom(user.room)
+        })
+    }
 
     socket.on('join', async ({ username, room }, callback) => {
         const {error, user} = addUser({ id: socket.id, username, room })
@@ -82,6 +93,7 @@ io.on('connection', (socket) => {
         callback()
     })
 
+    //Helper func for sending trivia message
     const sendTrivia = async (user, url) => {
         const response = await fetch(url)
         const json = await response.json();
@@ -159,6 +171,18 @@ io.on('connection', (socket) => {
     })
 
 })
+
+
+
+
+//Initialize the leaderboard
+// const lb = new Leaderboard()
+// lb.save().then(() => {
+//     console.log('Leaderboard')
+//     console.log(lb)
+// }).catch((error) => {
+//     console.log('Error!', error)
+// })
 
 
 

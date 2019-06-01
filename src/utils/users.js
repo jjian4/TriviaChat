@@ -1,3 +1,5 @@
+const Filter = require('bad-words')
+
 const users = []
 
 const addUser = ({ id, username, room }) => {
@@ -6,6 +8,15 @@ const addUser = ({ id, username, room }) => {
     //Validate data
     if (!username || !room) {
         return { error: 'Username and room are required.' }
+    }
+
+    //Check for profanity
+    filter = new Filter()
+    if (filter.isProfane(username)) {
+        return { error: 'Username is not allowed.' }
+    }
+    if (filter.isProfane(room)) {
+        return { error: 'Room name is not allowed.' }
     }
 
     //Check for existing user

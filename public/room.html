@@ -49,7 +49,7 @@
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <div id='trivia-dropup' class="dropdown-menu dropdown-menu-right">
-                            <!-- <a class="dropdown-item" onclick="sendTriviaCategory(this)">Action</a> -->
+                            <!--Filled by room.js-->
                         </div>
                     </div>
                                                                                                                                                 
@@ -110,7 +110,7 @@
                 </a>
             </div>
             <p class='room-title'>Room: {{room}}</p>
-            <p class='list-title'>Users</p>
+            <p class='list-title'>Users ({{users.length}})</p>
             <ul class='users'>
                 {{#users}}
                     <li class='user-name'>{{username}}</li>
