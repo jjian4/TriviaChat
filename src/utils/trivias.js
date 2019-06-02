@@ -7,7 +7,7 @@ const { updateTriviaRecord } = require('./lb_updates')
 //Get initial leaderboard stats
 let hardestTrivia = 0
 let easiestTrivia = 0
-axios.get('http://127.0.0.1:3000/leaderboard').then(function (response) {
+axios.get(process.env.LB_URL).then(function (response) {
     hardestTrivia = response.data.hardestTrivia.numWrong
     easiestTrivia = response.data.easiestTrivia.numCorrect
 }).catch(function (error) {

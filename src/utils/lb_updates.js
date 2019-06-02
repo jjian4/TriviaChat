@@ -1,7 +1,7 @@
 const axios = require('axios')
 const { getUsersInRoom } = require('./users')
 
-const url = 'http://127.0.0.1:3000/leaderboard'
+const url = process.env.LB_URL
 
 
 const updateUserRecord = (user, newNum, key) => {

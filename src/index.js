@@ -25,7 +25,7 @@ app.use(lbRouter)
 const server = http.createServer(app)
 const io = socketio(server)
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 const publicDirectoryPath = path.join(__dirname, '../public')
 
 app.use(express.static(publicDirectoryPath))
@@ -33,9 +33,7 @@ app.use(express.static(publicDirectoryPath))
 
 //Get initial leaderboard stats
 let mostTriviasAsked, mostTriviasCorrect, mostJokesAsked, mostMessages, biggestRoom = 0
-axios.get('http://127.0.0.1:3000/leaderboard').then(function (response) {
-    console.log('Leaderboard')
-    console.log(response.data)
+axios.get(process.env.LB_URL).then(function (response) {
     mostTriviasAsked = response.data.mostTriviasAsked.num
     mostTriviasCorrect = response.data.mostTriviasCorrect.num
     mostJokesAsked = response.data.mostJokesAsked.num
