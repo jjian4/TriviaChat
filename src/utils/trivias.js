@@ -1,4 +1,3 @@
-const fetch = require('node-fetch')
 const axios = require('axios')
 const { getUsersInRoom } = require('./users')
 const { updateTriviaRecord } = require('./lb_updates')
@@ -63,8 +62,8 @@ const checkTrivia = (question, room, answer) => {
 
 let categories = []
 const getCategories = async () => {
-    const response = await fetch('https://opentdb.com/api_category.php')
-    const data = await response.json();
+    const response = await axios.get('https://opentdb.com/api_category.php')
+    const data = response.data;
     categories = data.trivia_categories
     return categories
 }

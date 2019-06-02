@@ -1,5 +1,9 @@
 const Filter = require('bad-words')
 var decode = require('unescape');
+const axios = require('axios')
+
+const shuffle = require('shuffle-array')
+const { addTrivia } = require('./trivias')
 
 const generateMessage = (username, text) => {
     const filter = new Filter({ placeHolder: 'x'})
@@ -13,6 +17,47 @@ const generateMessage = (username, text) => {
         createdAt: new Date().getTime()
     }
 }
+
+const generateJokeMessage = async (username) => {
+    // const response = await fetch('https://official-joke-api.appspot.com/random_joke')
+    // const joke = await response.json();
+    
+    const response = await axios.get('https://official-joke-api.appspot.com/random_joke')
+    const joke = response.data
+
+    console.log(joke)
+
+    return {
+        username,
+        joke,
+        createdAt: new Date().getTime()    
+    }
+}
+
+const generateTriviaMessage = async (user, url) => {
+    const response = await axios.get(url)
+    const json = response.data
+
+    let trivia = unescapeQuestion(json['results'][0])
+
+    console.log(trivia)
+    addTrivia(trivia, user.room)
+
+    let answers = []
+    trivia.incorrect_answers.forEach(ans => {
+        answers.push(ans)
+    });
+    answers.push(trivia.correct_answer)
+    shuffle(answers)
+
+    return {
+        username: user.username,
+        trivia,
+        answers,
+        createdAt: new Date().getTime()    
+    }
+}
+
 
 const unescapeQuestion = (question) => {
     question.category = question.category.trim()
@@ -37,5 +82,7 @@ const unescapeQuestion = (question) => {
 
 module.exports = {
     generateMessage,
+    generateJokeMessage,
+    generateTriviaMessage,
     unescapeQuestion
 }

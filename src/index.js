@@ -2,17 +2,14 @@ const path = require('path')
 const http = require('http')
 const express = require('express')
 const socketio = require('socket.io')
-const fetch = require('node-fetch')
-const shuffle = require('shuffle-array')
 
 require('./db/mongoose') 
-const Leaderboard = require('./models/leaderboard')
 const lbRouter = require('./routers/leaderboard')
 const axios = require('axios')
 
-const { generateMessage, unescapeQuestion } = require('./utils/messages')
+const { generateMessage, generateJokeMessage, generateTriviaMessage, unescapeQuestion } = require('./utils/messages')
 const { addUser, removeUser, getUser, updateUser, getUsersInRoom } = require('./utils/users')
-const { addTrivia, checkTrivia, getCategories, getCategoryId } = require('./utils/trivias')
+const { checkTrivia, getCategories, getCategoryId } = require('./utils/trivias')
 const { updateUserRecord, updateBiggestRoom } = require('./utils/lb_updates')
 
 const app = express()
@@ -99,16 +96,7 @@ io.on('connection', (socket) => {
     socket.on('sendJoke', async (callback) => {
         const user = getUser(socket.id)
         
-        const response = await fetch('https://official-joke-api.appspot.com/random_joke')
-        const joke = await response.json();
-        
-        console.log(joke)
-
-        const jokeMessage = {
-            username: user.username,
-            joke,
-            createdAt: new Date().getTime()    
-        }
+        const jokeMessage = await generateJokeMessage(user.username)
 
         io.to(user.room).emit('joke', jokeMessage)
         user.numJokesSent += 1
@@ -122,26 +110,8 @@ io.on('connection', (socket) => {
 
     //Helper func for sending trivia message
     const sendTrivia = async (user, url) => {
-        const response = await fetch(url)
-        const json = await response.json();
-        let trivia = unescapeQuestion(json['results'][0])
 
-        console.log(trivia)
-        addTrivia(trivia, user.room)
-
-        let answers = []
-        trivia.incorrect_answers.forEach(ans => {
-            answers.push(ans)
-        });
-        answers.push(trivia.correct_answer)
-        shuffle(answers)
-
-        const triviaMessage = {
-            username: user.username,
-            trivia,
-            answers,
-            createdAt: new Date().getTime()    
-        }
+        const triviaMessage = await generateTriviaMessage(user, url)
         
         io.to(user.room).emit('trivia', triviaMessage)
         user.numTriviasSent += 1
