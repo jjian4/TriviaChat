@@ -8,10 +8,12 @@ const shuffle = require('shuffle-array')
 require('./db/mongoose') 
 const Leaderboard = require('./models/leaderboard')
 const lbRouter = require('./routers/leaderboard')
+const axios = require('axios')
 
 const { generateMessage, unescapeQuestion } = require('./utils/messages')
 const { addUser, removeUser, getUser, updateUser, getUsersInRoom } = require('./utils/users')
-const { addTrivia, getTrivia, getCategories, getCategoryId } = require('./utils/trivias')
+const { addTrivia, checkTrivia, getCategories, getCategoryId } = require('./utils/trivias')
+const { updateUserRecord, updateBiggestRoom } = require('./utils/lb_updates')
 
 const app = express()
 
@@ -29,6 +31,21 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
 
+//Get initial leaderboard stats
+let mostTriviasAsked, mostTriviasCorrect, mostJokesAsked, mostMessages, biggestRoom = 0
+axios.get('http://127.0.0.1:3000/leaderboard').then(function (response) {
+    console.log('Leaderboard')
+    console.log(response.data)
+    mostTriviasAsked = response.data.mostTriviasAsked.num
+    mostTriviasCorrect = response.data.mostTriviasCorrect.num
+    mostJokesAsked = response.data.mostJokesAsked.num
+    mostMessages = response.data.mostMessages.num
+    biggestRoom = response.data.biggestRoom.num
+}).catch(function (error) {
+    console.log(error)
+})
+
+    
 io.on('connection', (socket) => {
     console.log('New WebSocket connection!!')
 
@@ -61,6 +78,10 @@ io.on('connection', (socket) => {
             room: user.room,
             users: getUsersInRoom(user.room)
         })
+        if (getUsersInRoom(user.room).length > biggestRoom) {
+            biggestRoom = getUsersInRoom(user.room).length
+            updateBiggestRoom(user.room)
+        }
 
         callback()
     })
@@ -70,6 +91,10 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('message', generateMessage(user.username, message))
         user.numMessagesSent += 1
         updateUserStats(user)
+        if (user.numMessagesSent > mostMessages) {
+            mostMessages = user.numMessagesSent
+            updateUserRecord(user, mostMessages, 'mostMessages')        
+        }
         callback()
     })
 
@@ -90,6 +115,10 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('joke', jokeMessage)
         user.numJokesSent += 1
         updateUserStats(user)
+        if (user.numJokesSent > mostJokesAsked) {
+            mostJokesAsked = user.numJokesSent
+            updateUserRecord(user, mostJokesAsked, 'mostJokesAsked')        
+        }
         callback()
     })
 
@@ -119,6 +148,10 @@ io.on('connection', (socket) => {
         io.to(user.room).emit('trivia', triviaMessage)
         user.numTriviasSent += 1
         updateUserStats(user)
+        if (user.numTriviasSent > mostTriviasAsked) {
+            mostTriviasAsked = user.numTriviasSent
+            updateUserRecord(user, mostTriviasAsked, 'mostTriviasAsked')        
+        }
     }
     socket.on('sendTrivia', async (callback) => {
         const user = getUser(socket.id)
@@ -136,12 +169,16 @@ io.on('connection', (socket) => {
 
     socket.on('checkAnswer', ({question, answer}, callback) => {
         const user = getUser(socket.id)
-        const trivia = getTrivia(question, user.room)
-        if (trivia.correct_answer === answer) {
+        const {trivia, isCorrect } = checkTrivia(question, user.room, answer)
+        if (isCorrect) {
             socket.emit('correct', {
                 trivia
             })
             user.numTriviasCorrect += 1
+            if (user.numTriviasCorrect > mostTriviasCorrect) {
+                mostTriviasCorrect = user.numTriviasCorrect
+                updateUserRecord(user, mostTriviasCorrect, 'mostTriviasCorrect')            
+            }
         }
         else {
             socket.emit('incorrect', {
